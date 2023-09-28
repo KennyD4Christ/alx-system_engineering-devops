@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -Ap1 | LC_ALL=C.UTF-8 sort --ignore-leading-blanks --field-separator=, --key=1,1n
+ls -amvp
