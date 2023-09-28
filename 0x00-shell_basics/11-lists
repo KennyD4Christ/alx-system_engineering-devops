@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -lA "$PWD" "$PWD/.." "/boot"
+ls -lA . ../ /boot
