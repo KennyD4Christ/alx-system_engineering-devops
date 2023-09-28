@@ -1,2 +1,2 @@
 #!/bin/bash
-(ls -Ap1 | LC_COLLATE=C sort -t $'\n' -k1,1; echo '') | tr '\n' ', ' | sed 's/,$/\n/'
+ls -Ap1 | LC_ALL=C.UTF-8 sort --ignore-leading-blanks --field-separator=, --key=1,1n
