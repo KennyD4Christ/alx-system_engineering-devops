@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "$((5#${WATER//water/01234} + 5#01234))" | tr '01234567' 'bestchol'
+echo -n "$((5#${WATER//water/01234} + 5#01234))" | tr '01234567' 'bestchol'
