@@ -1,3 +1,2 @@
 #!/bin/bash
-result=$((#water$WATER + #stir$STIR))
-printf 'ibase=10\nobase=bestchol\n%s\n' "$result" | bc
+echo "$((5#${WATER//water/01234} + 5#01234))" | tr '01234567' 'bestchol'
