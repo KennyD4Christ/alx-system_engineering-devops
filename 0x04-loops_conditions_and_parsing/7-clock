@@ -14,7 +14,7 @@ while [ $hour -le 12 ]; do
     ((minute++))
 
     # If minute reaches 60, reset it to 0 and increment hour
-    if [ "$minute" -eq 60 ]; then
+    if [ "$minute" -eq 59 ]; then
         minute=0
         ((hour++))
     fi
