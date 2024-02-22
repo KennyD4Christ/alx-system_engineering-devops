@@ -2,11 +2,9 @@
 # This script displays a story based on the content of /etc/passwd
 
 # Read the /etc/passwd file line by line
-while IFS=: read -r username _ _ gid _ homedir shell; do
-    # Extract password from /etc/shadow
-    password=$(grep "^$username:" /etc/shadow | cut -d: -f2)
-    # Extract user ID info from finger command
-    user_info=$(finger "$username" | awk -F: '{print $3}')
-    # Print the story for each user
-    echo "The user $username is part of the $gid gang, lives in $homedir and rides $shell. User ID's place is protected by the passcode $password, more info about the user here: $user_info"
-done < /etc/passwd
+while IFS=':' read -r username password uid gid info home shell; do
+	echo "The user $username is part of the $gid gang,"\
+		"lives in $home and rides $shell."\
+		"$uid's place is protected by the passcode $password,"\
+		"more info about the user here: $info"
+		done < "/etc/passwd"
