@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Script: 67-stop_me_if_you_can
+# Description: Continuously run without any output until terminated by a SIGTERM signal.
+
+# Function to handle SIGTERM signal
+sigterm_handler() {
+    exit 0
+}
+
+# Trap SIGTERM signal and call the sigterm_handler function
+trap 'sigterm_handler' SIGTERM
+
+# Infinite loop
+while true; do
+    sleep 1
+done

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Script: 3-show_your_bash_pid_made_easy
+# Description: Display the PID and process name of processes whose name contain the word "bash".
+
+# Get the PID of the script
+SCRIPT_PID=$$
+
+# Iterate through each directory in /proc
+for pid_dir in /proc/*/; do
+    pid=$(basename "$pid_dir")
+    # Skip if the directory name is not a number (i.e., not a PID)
+    if ! [[ "$pid" =~ ^[0-9]+$ ]]; then
+        continue
+    fi
+    # Check if the cmdline file contains the word "bash"
+    if grep -q "bash" "$pid_dir/cmdline" && [ "$pid" != "$SCRIPT_PID" ]; then
+        # If it contains "bash", display the PID and process name
+        echo "$pid bash"
+    fi
+done
