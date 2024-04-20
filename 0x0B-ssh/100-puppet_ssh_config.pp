@@ -1,11 +1,12 @@
 # Define variable for key path (if not directly specified in the template)
-file { '/home/kennyd/.ssh/config':
-  ensure  => present,
-  mode    => '0600',
-  owner   => 'kennyd',
-  group   => 'kennyd',
-  content => "Host my_server
-  HostName 100.26.122.117
-  IdentityFile ~/.ssh/school
-  PasswordAuthentication no\n",
+file_line { 'Turn off passwd auth':
+  path  => '/etc/ssh/sshd_config',
+  line  => 'PasswordAuthentication no',
+  match => '^#?PasswordAuthentication',
+}
+
+file_line { 'Declare identity file':
+  path  => '/etc/ssh/ssh_config',
+  line  => 'IdentityFile ~/.ssh/school',
+  match => '^#?IdentityFile',
 }
