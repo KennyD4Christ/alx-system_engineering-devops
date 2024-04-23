@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# This script configures Nginx to redirect /redirect_me to another page with a 301 status code
+
+# Install nginx if not already installed
+if ! command -v nginx &> /dev/null; then
+    apt-get update
+    apt-get install -y nginx
+fi
+
+# Create a temporary Nginx configuration file
+cat <<EOF > /etc/nginx/sites-available/redirect_me
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name _;
+
+    location /redirect_me {
+        return 301 https://www.example.com/new_page;
+    }
+
+    location / {
+        return 404;
+    }
+}
+EOF
+
+# Enable the new configuration by creating a symbolic link
+ln -sf /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/redirect_me
+
+# Restart Nginx to apply the changes
+service nginx restart

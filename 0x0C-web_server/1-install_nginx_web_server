@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# This script installs nginx on a web server and configures it to listen on port 80
+# It also configures nginx to return "Hello World!" when queried at its root
+
+# Update package index
+apt-get update
+
+# Install nginx
+apt-get install -y nginx
+
+# Configure nginx to listen on port 80
+sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
+
+# Restart nginx
+service nginx restart
+
+# Create HTML file with "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
