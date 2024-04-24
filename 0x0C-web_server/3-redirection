@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
-# Script to configure Nginx redirection
 
-# Install nginx
-apt-get update
-apt-get install -y nginx
+# Source the previous script for Nginx installation (assuming it's in the same directory)
+source 1-install_nginx_web_server
 
-# Make sure nginx is running
-nginx
+# Redirect configuration path (modify as needed)
+redirect_path="/redirect_me"
+target_url="https://www.youtube.com/watch?v=QH2-TGUlwu4"
 
-# Configure nginx to redirect /redirect_me
-echo 'server {
-    listen 80;
-    server_name _;
-    root /var/www/html;
-    index index.html;
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-}' > /etc/nginx/sites-available/default
+# Modify default server block configuration with sed
+sudo sed -i "/location \/$/{a \
+  location $redirect_path { \
+    return 301 $target_url; \
+  }\n}" /etc/nginx/sites-available/default
 
-# Restart nginx (without using systemctl)
-kill -s HUP "$(cat /var/run/nginx.pid)"
+# Reload Nginx configuration
+sudo service nginx reload
 
+# Test the redirect with curl
+if curl -sI http://localhost/$redirect_path | grep "301 Moved Permanently"; then
+  echo "Nginx redirect for $redirect_path to $target_url is configured successfully!"
+else
+  echo "There might be an error with the Nginx redirect configuration."
+  exit 1
+fi
