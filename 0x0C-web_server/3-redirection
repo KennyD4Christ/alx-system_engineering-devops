@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Source the previous script for Nginx installation (assuming it's in the same directory)
-source 1-install_nginx_web_server
+# Nginx Installation (assuming previous script logic)
+sudo apt update
+sudo apt install nginx
 
 # Redirect configuration path (modify as needed)
 redirect_path="/redirect_me"
