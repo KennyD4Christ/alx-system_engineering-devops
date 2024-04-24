@@ -1,26 +1,32 @@
 #!/usr/bin/env bash
+# This script configures Nginx for 301 redirection
 
-# Nginx Installation (assuming previous script logic)
-sudo apt update
-sudo apt install nginx
+# Create a custom Nginx configuration file for redirection
+echo "server {
+    listen 80;
+    server_name _;
 
-# Redirect configuration path (modify as needed)
-redirect_path="/redirect_me"
-target_url="https://www.youtube.com/watch?v=QH2-TGUlwu4"
+    location /redirect_me {
+        return 301 http://www.youtube.com/watch?v=QH2-TGUlwu4
+    }
 
-# Modify default server block configuration with sed
-sudo sed -i "/location \/$/{a \
-  location $redirect_path { \
-    return 301 $target_url; \
-  }\n}" /etc/nginx/sites-available/default
+    location / {
+        root /var/www/html;
+	index index.html;
+    }
+}" | sudo tee /etc/nginx/sites-available/redirect_me
 
-# Reload Nginx configuration
-sudo service nginx reload
+# Enable the new configuration
+sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
 
-# Test the redirect with curl
-if curl -sI http://localhost/$redirect_path | grep "301 Moved Permanently"; then
-  echo "Nginx redirect for $redirect_path to $target_url is configured successfully!"
-else
-  echo "There might be an error with the Nginx redirect configuration."
-  exit 1
-fi
+# Remove the default configuration
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Restart Nginx
+sudo service nginx restart
+
+# Print a success message
+echo "Nginx is configured for 301 redirection from /redirect_me to http://www.youtube.com/watch?v=QH2-TGUlwu4"
