@@ -11,13 +11,6 @@ sudo apt-get update -y -qq && \
 
 echo -e "\nSetting up some minor stuff.\n"
 
-# Check if line containing 'location /redirect_me' exists
-if ! grep -q 'location /redirect_me' /etc/nginx/sites-available/default; then
-	# Location block doesn't exist, add it using sed (risky)
-	echo -e "\nAdding redirect location block...\n"
-	sudo sed -i '/server {/a\    location /redirect_me {\n      rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;\n    }\n' /etc/nginx/sites-available/default
-fi
-
 # starting nginx service
 sudo service nginx start
 
