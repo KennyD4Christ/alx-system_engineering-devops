@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Checks Nginx status and port usage
+netstat -tuln | grep ':80' | grep -q 'nginx' || echo "service (init) says that nginx is not running"
+exit $?
