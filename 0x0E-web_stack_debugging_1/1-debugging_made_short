@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-# Checks Nginx status and port usage
-netstat -tuln | grep ':80' | grep -q 'nginx' || echo "service (init) says that nginx is not running"
-exit $?
+# Configures an Nginx server to listen on port 80.
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx start
+kill "$(pgrep 'nginx' | head -1)”
