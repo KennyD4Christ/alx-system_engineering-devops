@@ -9,10 +9,7 @@ fi
 
 # Check if another web server like Apache is active and using port 80
 if sudo netstat -tuln | grep -q ":80"; then
-    echo "Error: Another web server like Apache is active and using port 80"
-    # Stop the Apache service
-    echo "Stopping Apache service..."
-    sudo service apache2 stop
+    echo "Nginx is using port 80 (as expected)"
 fi
 
 # Check if Nginx is running with sudo privileges
