@@ -1,34 +1,11 @@
 #!/usr/bin/env bash
-# This script generates a MySQL dump and creates a compressed archive out of it.
+# backup and compress my databases
 
-# Check if the password argument is provided
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <mysql_password>"
-    exit 1
-fi
+# variables
+day=$(date +"%d")
+month=$(date +"%m")
+year=$(date +"%Y")
+file_name="$day-$month-$year.tar.gz"
 
-# MySQL dump command
-mysqldump -u root -p"$1" --all-databases > backup.sql
-
-# Check if mysqldump was successful
-if ! mysqldump -u root -p"$1" --all-databases > /dev/null 2>&1; then
-    echo "MySQL dump failed. Exiting."
-    exit 1
-fi
-
-# Get the current date
-current_date=$(date +"%d-%m-%Y")
-
-# Compress the MySQL dump file to a tar.gz archive
-if ! tar -czvf "$current_date.tar.gz" backup.sql > /dev/null 2>&1; then
-    echo "Compression failed. Exiting."
-    exit 1
-fi
-
-echo "Backup completed successfully."
-
-# Compress the MySQL dump file to a tar.gz archive
-if ! tar -czvf "$current_date.tar.gz" backup.sql 2>&1 | grep -q "gzip compressed data"; then
-    echo "Compression failed. Exiting."
-    exit 1
-fi
+mysqldump --all-databases -u root --password="$1" > backup.sql
+tar -czvf "$file_name" backup.sql
