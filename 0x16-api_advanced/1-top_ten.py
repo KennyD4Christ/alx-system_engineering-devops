@@ -38,8 +38,15 @@ def top_ten(subreddit):
             return
 
         # Print the titles of the top 10 hottest posts
-        [print(c.get("data").get("title"))
-         for c in results.get("children", [])]
+        children = results.get("children", [])
+        if not children:
+            print("None")
+            return
+
+        for child in children:
+            title = child.get("data", {}).get("title")
+            if title:
+                print(title)
     except ValueError:
         # Handle JSON decoding errors
         print("None")
