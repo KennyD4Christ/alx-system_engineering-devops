@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-
 # This script reloads Gunicorn gracefully by sending the SIGHUP signal to the master process.
-
 # Function to get the Gunicorn master process PID
+
 get_gunicorn_pid() {
     pgrep -f "gunicorn"
 }
