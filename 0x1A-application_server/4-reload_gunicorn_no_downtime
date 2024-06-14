@@ -1,23 +1,30 @@
 #!/usr/bin/env bash
-# This script reloads Gunicorn gracefully by sending the SIGHUP signal to the master process.
-# Function to get the Gunicorn master process PID
+# Find all Gunicorn processes
+gunicorn_pids=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
 
-get_gunicorn_pid() {
-    pgrep -f "gunicorn"
-}
-
-# Get the Gunicorn PID
-GUNICORN_PID=$(get_gunicorn_pid)
-
-# Check if Gunicorn is running
-if [ -z "$GUNICORN_PID" ]; then
-    echo "Gunicorn is not running."
-    exit 1
+if [ -z "$gunicorn_pids" ]; then
+  echo "No Gunicorn processes found."
+  exit 1
 fi
 
-echo "Sending SIGHUP signal to Gunicorn master process (PID: $GUNICORN_PID) to reload gracefully."
+# Identify the master process
+master_pid=""
+for pid in $gunicorn_pids; do
+  parent_pid=$(ps -o ppid= -p $pid)
+  if [[ ! "$gunicorn_pids" =~ "$parent_pid" ]]; then
+    master_pid=$pid
+    break
+  fi
+done
 
-# Send the SIGHUP signal to the Gunicorn master process
-kill -HUP "$GUNICORN_PID"
+if [ -z "$master_pid" ]; then
+  echo "No Gunicorn master process found."
+  exit 1
+fi
+
+echo "Sending SIGHUP signal to Gunicorn master process PID: $master_pid"
+
+# Send SIGHUP signal to the master PID
+kill -SIGHUP $master_pid
 
 echo "Gunicorn reloading initiated."
