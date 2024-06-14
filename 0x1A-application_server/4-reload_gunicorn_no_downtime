@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Find all Gunicorn processes
-gunicorn_pids=$(ps aux | grep '[g]unicorn' | awk '{print $2}')
+# Find all Gunicorn processes using pgrep
+gunicorn_pids=$(pgrep -f gunicorn)
 
 if [ -z "$gunicorn_pids" ]; then
   echo "No Gunicorn processes found."
@@ -10,8 +10,8 @@ fi
 # Identify the master process
 master_pid=""
 for pid in $gunicorn_pids; do
-  parent_pid=$(ps -o ppid= -p $pid)
-  if [[ ! "$gunicorn_pids" =~ "$parent_pid" ]]; then
+  parent_pid=$(ps -o ppid= -p "$pid")
+  if [[ ! $gunicorn_pids =~ $parent_pid ]]; then
     master_pid=$pid
     break
   fi
@@ -25,6 +25,6 @@ fi
 echo "Sending SIGHUP signal to Gunicorn master process PID: $master_pid"
 
 # Send SIGHUP signal to the master PID
-kill -SIGHUP $master_pid
+kill -SIGHUP "$master_pid"
 
 echo "Gunicorn reloading initiated."
